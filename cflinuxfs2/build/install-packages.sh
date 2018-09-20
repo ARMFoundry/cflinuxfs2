@@ -14,6 +14,9 @@ function install_mysql_so_files() {
     if [ "`uname -m`" == "armv7l" ]; then
         mysqlpath="/usr/lib/arm-linux-gnueabihf"
     fi
+    if [ "`uname -m`" == "aarch64" ]; then
+       mysqlpath="/usr/lib/aarch64-linux-gnu" 
+    fi
     apt_get install libmysqlclient-dev
     tmp=`mktemp -d`
     mv $mysqlpath/libmysqlclient* $tmp
@@ -24,6 +27,10 @@ function install_mysql_so_files() {
 arch="amd64"
 if [ "`uname -m`" == "armv7l" ]; then
     arch="armhf"
+fi
+
+if [ "`uname -m`" == "aarch64" ]; then
+    arch="arm64"
 fi
 
 packages="
@@ -110,7 +117,7 @@ wget
 zip
 "
 
-if [ "`uname -m`" == "ppc64le" ] || [ "`uname -m`" == "armv7l" ]; then
+if [ "`uname -m`" == "ppc64le" ] || [ "`uname -m`" == "armv7l" ] || [ "`uname -m`" == "aarch64" ]; then
 packages=$(sed '/\b\(libopenblas-dev\|libdrm-intel1\|dmidecode\)\b/d' <<< "${packages}")
 ubuntu_url="http://ports.ubuntu.com/ubuntu-ports"
 else

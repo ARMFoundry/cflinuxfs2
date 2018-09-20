@@ -17,6 +17,13 @@ ifeq ("$(arch)","armv7l")
         $(shell sed -i 's/FROM ubuntu:trusty/FROM armv7\/armhf-ubuntu_core:14.04/g' $(docker_file))
 endif
 
+ifeq ("$(arch)","aarch64")
+        docker_image := "arm64v8/ubuntu:14.04"
+        docker_file := cflinuxfs2/Dockerfile.$(arch)
+        $(shell cp cflinuxfs2/Dockerfile $(docker_file))
+        $(shell sed -i 's/FROM ubuntu:trusty/FROM arm64v8\/ubuntu:14.04/g' $(docker_file))
+endif
+
 cflinuxfs2.cid: 
 	docker build --no-cache -f $(docker_file) -t cloudfoundry/cflinuxfs2 cflinuxfs2
 	docker run --cidfile=cflinuxfs2.cid cloudfoundry/cflinuxfs2 dpkg -l | tee cflinuxfs2/cflinuxfs2_dpkg_l.out
